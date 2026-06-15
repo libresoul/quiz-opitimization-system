@@ -10,6 +10,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-inter: var(--font-inter);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -25,8 +26,22 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+@utility dark-border {
+  @apply border dark:border-[#2b2c2c];
+}
+
+@utility input-border {
+  @apply shadow-md dark-border;
+}
+
 @layer components {
   main {
     @apply mx-10 my-2;
+
+    form {
+      div {
+        @apply flex flex-col mt-5;
+      }
+    }
   }
 }
