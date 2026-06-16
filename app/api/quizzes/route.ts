@@ -15,7 +15,20 @@ export async function GET() {
     )
   }
 
-  const { data, error } = await supabase.from('quizzes').select().limit(20)
+  const { data, error } = await supabase
+    .from('quizzes')
+    .select(
+      `
+      id,
+      title,
+      total_time,
+      status,
+      questions (
+        id
+      )
+    `
+    )
+    .order('id', { ascending: true })
 
   if (error) {
     return NextResponse.json(
@@ -27,8 +40,25 @@ export async function GET() {
     )
   }
 
+  const quizzes = (data ?? []).map((quiz) => ({
+    id: quiz.id,
+    title: quiz.title,
+    total_time: quiz.total_time,
+    status: quiz.status,
+    question_count: quiz.questions?.length ?? 0
+  }))
+
+  const stats = {
+    available_quizzes: quizzes.length,
+    questions_total: quizzes.reduce((total, quiz) => total + quiz.question_count, 0),
+    open_quizzes: quizzes.filter((quiz) => quiz.status === 'open').length
+  }
+
   return NextResponse.json({
     success: true,
-    data
+    data: {
+      quizzes,
+      stats
+    }
   })
 }
