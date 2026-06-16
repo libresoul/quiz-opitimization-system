@@ -1,6 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import type { ReactNode } from 'react'
 
 type DashboardShellProps = {
@@ -19,6 +21,28 @@ export default function DashboardShell({
   children,
   breadcrumbs = []
 }: DashboardShellProps) {
+  const router = useRouter()
+  const [loggingOut, setLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    setLoggingOut(true)
+
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      })
+
+      if (!response.ok) {
+        throw new Error('Logout failed')
+      }
+
+      router.replace('/login')
+    } finally {
+      setLoggingOut(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-950 dark:bg-neutral-950 dark:text-neutral-50">
       <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-6 sm:px-6 lg:px-8">
@@ -62,6 +86,14 @@ export default function DashboardShell({
               >
                 Quizzes
               </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="rounded-lg border border-neutral-200 px-3 py-2 hover:bg-neutral-100 disabled:opacity-60 dark:border-neutral-800 dark:hover:bg-neutral-800"
+              >
+                {loggingOut ? 'Logging out...' : 'Logout'}
+              </button>
             </div>
           </div>
 
