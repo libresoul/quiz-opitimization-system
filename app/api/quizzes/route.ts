@@ -28,6 +28,7 @@ export async function GET() {
       )
     `
     )
+    .eq('status', 'open')
     .order('id', { ascending: true })
 
   if (error) {
