@@ -1,17 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import z from 'zod'
 import { createClient } from '@/lib/supabase/server'
-
-const signUpSchema = z.object({
-  fullName: z.string(),
-  email: z.email(),
-  password: z.string()
-})
-
-type UserData = z.infer<typeof signUpSchema>
+import { SignUpRequest, signUpSchema } from '@/types/api'
 
 export async function POST(request: NextRequest) {
-  const payload: UserData = await request.json()
+  const payload: SignUpRequest = await request.json()
   const validated = signUpSchema.safeParse(payload)
 
   if (!validated.success) {
@@ -51,14 +44,30 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  return NextResponse.json(
+  const response = NextResponse.json(
     {
-      sucess: true,
+      success: true,
       message: 'Sign up success',
-      userId: data.user?.id,
-      token: data.session?.access_token,
-      refreshToken: data.session?.refresh_token
+      data: data.user
     },
     { status: 201 }
   )
+
+  if (data.session) {
+    response.cookies.set('sb-access-token', data.session.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: data.session.expires_in
+    })
+
+    response.cookies.set('sb-refresh-token', data.session.refresh_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 5
+    })
+  }
+
+  return response
 }
