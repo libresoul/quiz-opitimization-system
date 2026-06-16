@@ -100,6 +100,8 @@ grant references on table "public"."answers" to "authenticated";
 
 grant select on table "public"."answers" to "authenticated";
 
+grant insert on table "public"."answers" to "authenticated";
+
 grant trigger on table "public"."answers" to "authenticated";
 
 grant truncate on table "public"."answers" to "authenticated";
