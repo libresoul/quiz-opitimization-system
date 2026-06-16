@@ -1,9 +1,9 @@
 import z from 'zod'
 
 export const signUpSchema = z.object({
-  fullName: z.string(),
-  email: z.email(),
-  password: z.string()
+  fullName: z.string().regex(/^[a-zA-Z']+\s[a-zA-Z']+$/, 'Invalid name'),
+  email: z.email('Invalid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters')
 })
 
 export type SignUpRequest = z.infer<typeof signUpSchema>
