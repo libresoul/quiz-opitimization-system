@@ -1,19 +1,94 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+import { useRef, useState } from 'react'
+import { toast } from 'sonner'
+import z from 'zod'
+import { signUpSchema as baseSchema } from '@/types/api'
+
+const signUpSchema = baseSchema
+  .extend({
+    confirmPassword: z.string()
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword']
+  })
+
+type SignUpFieldErrors = z.inferFlattenedErrors<
+  typeof signUpSchema
+>['fieldErrors']
+
 export default function signUp() {
-  const handleSignUp = (formData: FormData) => {
-    console.log(Object.fromEntries(formData))
+  const router = useRouter()
+  const formRef = useRef<HTMLFormElement>(null)
+  const [errors, setErrors] = useState<SignUpFieldErrors | null>(null)
+
+  const handleSignUp = async (formData: FormData) => {
+    setErrors(null)
+    const signUpData = signUpSchema.safeParse(Object.fromEntries(formData))
+
+    if (!signUpData.success) {
+      setErrors(z.flattenError(signUpData.error).fieldErrors)
+      return
+    }
+
+    const response = await fetch('/api/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify(Object.fromEntries(formData))
+    })
+
+    if (!response.ok) {
+      toast.error('Registration failed')
+    }
+
+    const data = await response.json()
+
+    if (data.success) {
+      formRef.current?.reset()
+      toast.success('Registration success!')
+      setTimeout(() => {
+        toast.success('Redirecting...')
+      }, 1000)
+      setTimeout(() => {
+        router.replace('/dashboard')
+      }, 1500)
+    }
   }
+
+  const errorMessages = Object.entries(errors ?? {}).flatMap(
+    ([field, messages]) =>
+      (messages ?? []).map((message, index) => ({
+        id: `${field}-${index}`,
+        text: `${field}: ${message}`
+      }))
+  )
 
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="p-5 rounded-xl mx-auto my-10 dark:bg-neutral-900 shadow-md dark-border">
+        {errorMessages.length > 0 ? (
+          <div className="mb-5 rounded border border-red-500/30 bg-red-900/20 p-4">
+            {errorMessages.map((error) => (
+              <p className="text-sm" key={error.id}>
+                {error.text}
+              </p>
+            ))}
+          </div>
+        ) : null}
+
         <h1 className="font-bold font-inter">Create an account</h1>
         <p className="text-[0.85em] text-neutral-500">
           Enter your information below to create your account
         </p>
 
-        <form action={handleSignUp}>
+        <form
+          ref={formRef}
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleSignUp(new FormData(e.currentTarget))
+          }}
+        >
           <div>
             <label className="text-sm" htmlFor="fname">
               Full Name
