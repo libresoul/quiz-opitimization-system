@@ -24,12 +24,12 @@ bun dev # or npm run dev
 
 ### Running migrations
 
-**on local supabase environment**
+**on a local supabase environment**
 ```bash
 supabase db reset
 ```
 
-**on remote supabase instancee**
+**on a remote supabase instance**
 
 Link the supabase project
 ```bash
