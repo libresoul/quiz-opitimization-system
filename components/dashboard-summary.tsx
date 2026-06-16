@@ -12,15 +12,15 @@ type QuizStats = {
 
 type DashboardResponse =
   | {
-      success: true
-      data: {
-        stats: QuizStats
-      }
+    success: true
+    data: {
+      stats: QuizStats
     }
+  }
   | {
-      success: false
-      message: string
-    }
+    success: false
+    message: string
+  }
 
 const quickLinks = [
   {
@@ -67,11 +67,11 @@ export default function DashboardSummary() {
     }
   }, [])
 
-const statItems = [
-  { label: 'Available quizzes', value: stats.available_quizzes.toString() },
-  { label: 'Questions total', value: stats.questions_total.toString() },
-  { label: 'Open quizzes', value: stats.open_quizzes.toString() }
-]
+  const statItems = [
+    { label: 'Available quizzes', value: stats.available_quizzes.toString() },
+    { label: 'Questions total', value: stats.questions_total.toString() },
+    { label: 'Open quizzes', value: stats.open_quizzes.toString() }
+  ]
 
   return (
     <>
@@ -96,10 +96,6 @@ const statItems = [
           <div className="flex items-center justify-between gap-3">
             <div>
               <h2 className="text-lg font-semibold">Workspace overview</h2>
-              <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                A minimal dashboard shell for quiz browsing and optimization
-                preview.
-              </p>
             </div>
             <Link
               href="/dashboard/quizzes"

@@ -5,7 +5,7 @@ export default function Dashboard() {
   return (
     <DashboardShell
       title="Dashboard"
-      description="Track quizzes, inspect question sets, and preview the optimal selection layout."
+      description="Track quizzes, attempt question sets"
     >
       <DashboardSummary />
     </DashboardShell>

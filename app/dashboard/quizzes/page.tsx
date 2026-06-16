@@ -15,9 +15,6 @@ export default function QuizzesPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold">Available quizzes</h2>
-            <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-              Minimal listing UI with quiz metadata and action links.
-            </p>
           </div>
         </div>
 

@@ -112,7 +112,7 @@ export default function QuizDetailPage() {
   return (
     <DashboardShell
       title="Quiz detail"
-      description="Review the questions for a quiz and answer them using the minimal input layout."
+      description="Review the questions for a quiz and answer them"
       breadcrumbs={[
         { label: 'Dashboard', href: '/dashboard' },
         { label: 'Quizzes', href: '/dashboard/quizzes' },
@@ -127,9 +127,7 @@ export default function QuizDetailPage() {
                 {quiz?.title ?? 'Loading quiz...'}
               </h2>
               <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                {quiz
-                  ? 'Question list with answer fields.'
-                  : 'Loading question list...'}
+                {quiz ? 'Question list' : 'Loading question list...'}
               </p>
             </div>
             <Link
@@ -153,7 +151,8 @@ export default function QuizDetailPage() {
                     </p>
                     <h3 className="mt-1 font-medium">{question.text}</h3>
                     <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                      Score {question.score ?? 0} points · {question.time ?? 0} min
+                      Score {question.score ?? 0} points · {question.time ?? 0}{' '}
+                      min
                     </p>
                   </div>
 
@@ -185,7 +184,9 @@ export default function QuizDetailPage() {
                     disabled={savingQuestionId === question.id}
                     className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-800"
                   >
-                    {savingQuestionId === question.id ? 'Saving...' : 'Save answer'}
+                    {savingQuestionId === question.id
+                      ? 'Saving...'
+                      : 'Save answer'}
                   </button>
                 </div>
               </div>
