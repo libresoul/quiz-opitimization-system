@@ -22,3 +22,21 @@ cp .env.example .env.local # set your envs here
 bun dev # or npm run dev
 ```
 
+### Running migrations
+
+**on local supabase environment**
+```bash
+supabase db reset
+```
+
+**on remote supabase instancee**
+
+Link the supabase project
+```bash
+supabase link
+```
+
+Run the local migrations and seeds
+```bash
+supabase db reset --linked
+```
