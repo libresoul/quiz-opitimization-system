@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -131,6 +132,12 @@ export default function QuizDetailPage() {
                   : 'Loading question list...'}
               </p>
             </div>
+            <Link
+              href={`/dashboard/quizzes/${quizId}/optimal?timeLimit=${quiz?.total_time ?? 7}`}
+              className="rounded-lg bg-black px-3 py-2 text-sm font-semibold text-white hover:opacity-90 dark:bg-white dark:text-black"
+            >
+              See optimal set
+            </Link>
           </div>
 
           <div className="mt-5 space-y-4">

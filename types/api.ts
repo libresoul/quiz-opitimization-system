@@ -57,6 +57,25 @@ export type QuizDetailRow = QuizRow & {
   questions: QuizQuestionRow[]
 }
 
+export type OptimalQuestionRow = Pick<
+  QuestionRow,
+  'id' | 'text' | 'score' | 'time'
+>
+
+export type OptimalSetResult = {
+  quiz: QuizRow
+  time_limit: number
+  total_score: number
+  total_time: number
+  remaining_time: number
+  selected_questions: OptimalQuestionRow[]
+  available_questions: OptimalQuestionRow[]
+}
+
+export const optimalSetQuerySchema = z.object({
+  timeLimit: z.coerce.number().int().positive().default(7)
+})
+
 export const submitAnswerSchema = z.object({
   questionId: z.coerce.number().int().positive(),
   text: z.string().min(1),
